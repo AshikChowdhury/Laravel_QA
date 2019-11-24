@@ -29,7 +29,9 @@ class Question extends Model
      */
     public function setTitleAttribute($value){
         $this->attributes['title'] = $value;
-        $this->attributes['slug'] = Str::slug($value);
+//        $this->attributes['slug'] = Str::slug($value);
+//        create slug for bengla
+        $this->attributes['slug'] = preg_replace('/\s+/u', '-', trim($value));
     }
 
     /**
