@@ -38,7 +38,7 @@ class Question extends Model
      * @return string
      */
     public function getUrlAttribute(){
-        return route('questions.show', $this->id);
+        return route('questions.show', $this->slug);
     }
 
     /**
@@ -59,6 +59,13 @@ class Question extends Model
             return 'answered';
         }
         return 'unanswered';
+    }
+
+    /**
+     * @return string
+     */
+    public function getBodyHtmlAttribute(){
+        return \Parsedown::instance()->text($this->body);
     }
 
 }
