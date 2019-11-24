@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AskQuestionRequest;
 use App\Question;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class QuestionsController extends Controller
 {
@@ -54,7 +55,7 @@ class QuestionsController extends Controller
     public function show(Question $question)
     {
         $question->increment('views');
-        return view('questions.show',compact('question'));
+        return view('questions.show', compact('question'));
     }
 
     /**
@@ -65,18 +66,24 @@ class QuestionsController extends Controller
      */
     public function edit(Question $question)
     {
+        if (Gate::denies('update-question', $question)){
+            abort(403, 'Access Denied');
+        }
         return view('questions.edit', compact('question'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Question  $question
+     * @param AskQuestionRequest $request
+     * @param \App\Question $question
      * @return \Illuminate\Http\Response
      */
     public function update(AskQuestionRequest $request, Question $question)
     {
+        if (Gate::denies('update-question', $question)){
+            abort(403, 'Access Denied');
+        }
         $question->update($request->only('title','body'));
 
         return redirect('/questions')->with('success','Your question has been updated.');
@@ -85,11 +92,15 @@ class QuestionsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Question  $question
+     * @param \App\Question $question
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Question $question)
     {
+        if (Gate::denies('delete-question', $question)){
+            abort(403, 'Access Denied');
+        }
         $question->delete();
         return redirect('/questions')->with('success', 'Question has been deleted.');
     }
