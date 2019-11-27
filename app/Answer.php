@@ -31,6 +31,9 @@ class Answer extends Model
         return \Parsedown::instance()->text($this->body);
     }
 
+    /**
+     *
+     */
     public static function boot()
     {
         parent::boot();
@@ -39,6 +42,20 @@ class Answer extends Model
             $answer->question->increment('answers_count');
             $answer->question->save();
         });
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrlAttribute(){
+        return route('questions.show', $this->slug);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreatedDateAttribute(){
+        return $this->created_at->diffForHumans();
     }
 
 }
