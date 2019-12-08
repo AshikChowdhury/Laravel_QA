@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 
 /**
@@ -81,6 +82,34 @@ class Question extends Model
     public function acceptBestAnswer(Answer $answer){
         $this->best_answer_id = $answer->id;
         $this->save();
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public  function favorites(){
+        return $this->belongsToMany(User::class, 'favorites'); //'question_id','user_id'
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isFavorited(){
+        return $this->favorites()->where('user_id', auth()->id())->count();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsFavoritedAttribute(){
+        return $this->isFavorited();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFavoritesCountAttribute(){
+        return $this->favorites->count();
     }
 
 }

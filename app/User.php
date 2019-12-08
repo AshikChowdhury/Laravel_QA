@@ -2,10 +2,12 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use phpDocumentor\Reflection\Type;
 
 /**
  * Class User
@@ -49,14 +51,23 @@ class User extends Authenticatable
         return $this->hasMany(Question::class);
     }
 
+    /**
+     * @return string
+     */
     public function getUrlAttribute(){
         return '#';
     }
 
+    /**
+     * @return HasMany
+     */
     public function answers(){
         return $this->hasMany(Answer::class);
     }
 
+    /**
+     * @return string
+     */
     public function getAvatarAttribute(){
         $email = $this->email;
         $size = 32;
@@ -64,4 +75,10 @@ class User extends Authenticatable
 
     }
 
+    /**
+     * @return BelongsToMany
+     */
+    public  function favorites(){
+        return $this->belongsToMany(Question::class, 'favorites'); //,'user_id','question_id');
+    }
 }
