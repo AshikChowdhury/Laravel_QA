@@ -6,6 +6,10 @@ use App\User;
 use App\Answer;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Class AnswerPolicy
+ * @package App\Policies
+ */
 class AnswerPolicy
 {
     use HandlesAuthorization;
@@ -32,6 +36,16 @@ class AnswerPolicy
     public function delete(User $user, Answer $answer)
     {
         return $user->id === $answer->user_id;
+    }
+
+    /**
+     * @param User $user
+     * @param Answer $answer
+     * @return bool
+     */
+    public function accept(User $user, Answer $answer)
+    {
+        return $user->id === $answer->question->user_id;
     }
 
 }
