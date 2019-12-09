@@ -12,6 +12,9 @@
 */
 
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -28,3 +31,8 @@ Route::get('/questions/{slug}', 'QuestionsController@show')->name('questions.sho
 
 //best answer accept route
 Route::post('/answers/{answer}/accept', 'AcceptAnswerController')->name('answers.accept');
+
+//favoriting the question
+Route::post('/questions/{question}/favorites', 'FavoritesController@store')->name('questions.favorite');
+Route::delete('/questions/{question}/favorites', 'FavoritesController@destroy')->name('questions.unfavorite');
+
