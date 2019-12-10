@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Str;
 
 /**
@@ -110,6 +111,27 @@ class Question extends Model
      */
     public function getFavoritesCountAttribute(){
         return $this->favorites->count();
+    }
+
+    /**
+     * @return MorphToMany
+     */
+    public  function votes(){
+        return $this->morphToMany(User::class, 'votable')->withTimestamps();
+    }
+
+    /**
+     * @return MorphToMany
+     */
+    public function upVotes(){
+        return $this->votes()->wherePivot('vote',1);
+    }
+
+    /**
+     * @return MorphToMany
+     */
+    public function downVotes(){
+        return $this->votes()->wherePivot('vote',-1);
     }
 
 }

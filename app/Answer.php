@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * Class Answer
@@ -11,6 +12,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Answer extends Model
 {
+    /**
+     * @var array
+     */
     protected $fillable = ['body', 'user_id'];
     /**
      * @return BelongsTo
@@ -69,17 +73,33 @@ class Answer extends Model
         return $this->created_at->diffForHumans();
     }
 
+    /**
+     * @return string
+     */
     public function getStatusAttribute(){
         return $this->isBest() ? 'vote-accepted' : '';
     }
 
 
+    /**
+     * @return bool
+     */
     public function getIsBestAttribute(){
         return $this->isBest();
     }
 
+    /**
+     * @return bool
+     */
     public function isBest(){
         return $this->id === $this->question->best_answer_id;
+    }
+
+    /**
+     * @return MorphToMany
+     */
+    public  function votes(){
+        return $this->morphToMany(User::class, 'votable')->withTimestamps();
     }
 
 }
