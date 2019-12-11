@@ -97,6 +97,10 @@ class User extends Authenticatable
         return $this->morphedByMany(Answer::class, 'votable')->withTimestamps();
     }
 
+    /**
+     * @param Question $question
+     * @param $vote
+     */
     public function voteQuestion(Question $question, $vote){
         $voteQuestions = $this->voteQuestions();
         if ($voteQuestions->where('votable_id', $question->id)->exists()){
@@ -112,6 +116,29 @@ class User extends Authenticatable
 
         $question->votes_count = $upVotes + $downVotes;
         $question->save();
+
+    }
+
+
+    /**
+     * @param Answer $answer
+     * @param $vote
+     */
+    public function voteAnswer(Answer $answer, $vote){
+        $voteAnswers = $this->voteAnswers();
+        if ($voteAnswers->where('votable_id', $answer->id)->exists()){
+            $voteAnswers->updateExistingPivot($answer, ['vote' => $vote]);
+        }
+        else{
+            $voteAnswers->attach($answer, ['vote' => $vote]);
+        }
+
+        $answer->load('votes');
+        $upVotes = (int) $answer->upVotes()->sum('vote');
+        $downVotes = (int) $answer->downVotes()->sum('vote');
+
+        $answer->votes_count = $upVotes + $downVotes;
+        $answer->save();
 
     }
 }

@@ -38,5 +38,7 @@ Route::delete('/questions/{question}/favorites', 'FavoritesController@destroy')-
 
 //vote the question
 Route::post('/questions/{question}/vote', 'VoteQuestionController');
+//vote the answer
+Route::post('/answers/{answer}/vote', 'VoteAnswerController');
 
 

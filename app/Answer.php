@@ -102,4 +102,18 @@ class Answer extends Model
         return $this->morphToMany(User::class, 'votable')->withTimestamps();
     }
 
+    /**
+     * @return MorphToMany
+     */
+    public function upVotes(){
+        return $this->votes()->wherePivot('vote',1);
+    }
+
+    /**
+     * @return MorphToMany
+     */
+    public function downVotes(){
+        return $this->votes()->wherePivot('vote',-1);
+    }
+
 }
