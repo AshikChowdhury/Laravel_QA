@@ -18,6 +18,7 @@ class Question extends Model
     /**
      * @var array
      */
+    use VotableTrait;
     protected  $fillable = ['title','body'];
 
     /**
@@ -113,26 +114,4 @@ class Question extends Model
     public function getFavoritesCountAttribute(){
         return $this->favorites->count();
     }
-
-    /**
-     * @return MorphToMany
-     */
-    public  function votes(){
-        return $this->morphToMany(User::class, 'votable')->withTimestamps();
-    }
-
-    /**
-     * @return MorphToMany
-     */
-    public function upVotes(){
-        return $this->votes()->wherePivot('vote',1);
-    }
-
-    /**
-     * @return MorphToMany
-     */
-    public function downVotes(){
-        return $this->votes()->wherePivot('vote',-1);
-    }
-
 }
