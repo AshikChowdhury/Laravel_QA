@@ -19,6 +19,9 @@ class Question extends Model
      * @var array
      */
     use VotableTrait;
+    /**
+     * @var array
+     */
     protected  $fillable = ['title','body'];
 
     /**
@@ -69,7 +72,7 @@ class Question extends Model
      * @return string
      */
     public function getBodyHtmlAttribute(){
-        return \Parsedown::instance()->text($this->body);
+        return $this->bodyHtml();
     }
 
     /**
@@ -114,4 +117,28 @@ class Question extends Model
     public function getFavoritesCountAttribute(){
         return $this->favorites->count();
     }
+
+    /**
+     * @return string
+     */
+    public function getExcerptAttribute(){
+       return $this->excerpt(250);
+    }
+
+    /**
+     * @param $length
+     * @return string
+     */
+    public function excerpt($length){
+        return Str::limit(strip_tags($this->bodyHtml()), $length);
+    }
+
+    /**
+     * @return string
+     */
+    private function bodyHtml(){
+        return \Parsedown::instance()->text($this->body);
+    }
 }
+
+

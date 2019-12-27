@@ -10,13 +10,9 @@
     @endphp
 @endif
 
-{{--@php--}}
-{{--    $fromId = $name . "-" . $model->id;--}}
-{{--@endphp--}}
-
 <div class="d-fex flex-column vote-controls">
     <a title="This {{$name}} is useful" class="vote-up {{ Auth::guest() ? 'off' : '' }}"
-       onclick="event.preventDefault(); document.getElementById('up-vote-{{$name}}-{{ $model->id }}').submit()"
+       onclick="event.preventDefault(); document.getElementById('up-vote-{{ $formId }}').submit()"
     >
         <i class="fas fa-caret-up fa-3x"></i>
     </a>
