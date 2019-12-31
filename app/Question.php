@@ -18,6 +18,10 @@ class Question extends Model
     /**
      * @var array
      */
+    use VotableTrait;
+    /**
+     * @var array
+     */
     protected  $fillable = ['title','body'];
 
     /**
@@ -68,7 +72,7 @@ class Question extends Model
      * @return string
      */
     public function getBodyHtmlAttribute(){
-        return clean(\Parsedown::instance()->text($this->body));
+        return clean($this->bodyHtml());
     }
 
     /**
@@ -115,24 +119,26 @@ class Question extends Model
     }
 
     /**
-     * @return MorphToMany
+     * @return string
      */
-    public  function votes(){
-        return $this->morphToMany(User::class, 'votable')->withTimestamps();
+    public function getExcerptAttribute(){
+       return $this->excerpt(250);
     }
 
     /**
-     * @return MorphToMany
+     * @param $length
+     * @return string
      */
-    public function upVotes(){
-        return $this->votes()->wherePivot('vote',1);
+    public function excerpt($length){
+        return Str::limit(strip_tags($this->bodyHtml()), $length);
     }
 
     /**
-     * @return MorphToMany
+     * @return string
      */
-    public function downVotes(){
-        return $this->votes()->wherePivot('vote',-1);
+    private function bodyHtml(){
+        return \Parsedown::instance()->text($this->body);
     }
-
 }
+
+
