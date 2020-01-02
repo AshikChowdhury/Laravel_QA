@@ -1,18 +1,30 @@
 <?php
 namespace App;
 
-trait VotableTrait
-{
-    public function votes()
-    {
-        return $this->morphToMany(User::class, 'votable');
+/**
+ * Trait VotableTrait
+ * @package App
+ */
+trait VotableTrait{
+
+    /**
+     * @return mixed
+     */
+    public  function votes(){
+        return $this->morphToMany(User::class, 'votable')->withTimestamps();
     }
-    public function upVotes()
-    {
-        return $this->votes()->wherePivot('vote', 1);
+
+    /**
+     * @return mixed
+     */
+    public function upVotes(){
+        return $this->votes()->wherePivot('vote',1);
     }
-    public function downVotes()
-    {
-        return $this->votes()->wherePivot('vote', -1);
+
+    /**
+     * @return mixed
+     */
+    public function downVotes(){
+        return $this->votes()->wherePivot('vote',-1);
     }
 }

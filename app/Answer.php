@@ -15,6 +15,7 @@ class Answer extends Model
     /**
      * @var array
      */
+    use VotableTrait;
     protected $fillable = ['body', 'user_id'];
     /**
      * @return BelongsTo
@@ -93,27 +94,6 @@ class Answer extends Model
      */
     public function isBest(){
         return $this->id === $this->question->best_answer_id;
-    }
-
-    /**
-     * @return MorphToMany
-     */
-    public  function votes(){
-        return $this->morphToMany(User::class, 'votable')->withTimestamps();
-    }
-
-    /**
-     * @return MorphToMany
-     */
-    public function upVotes(){
-        return $this->votes()->wherePivot('vote',1);
-    }
-
-    /**
-     * @return MorphToMany
-     */
-    public function downVotes(){
-        return $this->votes()->wherePivot('vote',-1);
     }
 
 }
