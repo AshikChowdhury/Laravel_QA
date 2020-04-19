@@ -24,6 +24,8 @@ class Question extends Model
      */
     protected  $fillable = ['title','body'];
 
+    protected  $appends = ['created_date'];
+
     /**
      * @return BelongsTo
      */
@@ -72,7 +74,7 @@ class Question extends Model
      * @return string
      */
     public function getBodyHtmlAttribute(){
-        return clean($this->bodyHtml());
+        return $this->bodyHtml();
     }
 
     /**
